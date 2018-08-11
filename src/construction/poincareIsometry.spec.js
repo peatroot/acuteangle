@@ -5,7 +5,8 @@ import PoincareIsometry from './poincareIsometry';
 const ORIGIN = math.complex(0, 0);
 const C1 = math.complex(1, 1);
 const C2 = math.complex(-3, 4);
-
+const THETA = Math.PI / 2;
+const PSI = Math.PI / 4;
 
 describe('PoincareIsometry', () => {
   it('can reflect in the real axis', () => {
@@ -24,22 +25,19 @@ describe('PoincareIsometry', () => {
   });
 
   it('can rotate pi / 2 anticlockwise', () => {
-    const theta = Math.PI / 2;
     const polar = C1.toPolar();
-    const c2 = PoincareIsometry.rotateAntiClockwiseAboutOrigin(C1, theta);
+    const c2 = PoincareIsometry.rotateAntiClockwiseAboutOrigin(C1, THETA);
     expect(math.equal(
       c2,
-      math.type.Complex.fromPolar(polar.r, polar.phi + theta)
+      math.type.Complex.fromPolar(polar.r, polar.phi + THETA)
     )).toBeTruthy();
   });
 
   it('can compose rotations', () => {
-    const theta = Math.PI / 2;
-    const psi = Math.PI / 4;
-    const r1 = PoincareIsometry.rotationAntiClockwiseAboutOrigin(theta);
-    const r2 = PoincareIsometry.rotationAntiClockwiseAboutOrigin(psi);
+    const r1 = PoincareIsometry.rotationAntiClockwiseAboutOrigin(THETA);
+    const r2 = PoincareIsometry.rotationAntiClockwiseAboutOrigin(PSI);
     const m = Moebius.compose(r1, r2);
-    const c2 = PoincareIsometry.rotateAntiClockwiseAboutOrigin(C1, theta + psi);
+    const c2 = PoincareIsometry.rotateAntiClockwiseAboutOrigin(C1, THETA + PSI);
     expect(math.equal(c2, m.multiply(C1))).toBeTruthy();
   });
 
