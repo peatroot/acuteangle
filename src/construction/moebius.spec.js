@@ -32,4 +32,14 @@ describe('Moebius', () => {
       c2
     )).toBeTruthy();
   });
+
+  it('can compose two moebii', () => {
+    const mat1 = math.matrix([[2, 0], [-1, 3]]);
+    const mat2 = math.matrix([[7, 2], [-2, 3]]);
+    const prod = math.multiply(mat1, mat2);
+    expect(Moebius.compose(
+      Moebius.fromMatrix(mat1),
+      Moebius.fromMatrix(mat2)
+    )).toEqual(Moebius.fromMatrix(prod));
+  })
 });
