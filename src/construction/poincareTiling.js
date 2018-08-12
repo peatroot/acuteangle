@@ -37,9 +37,33 @@ class PoincareTiling {
     // calculate polygon centred at origin
     const originPolygon = PoincarePolygon.atOrigin(this.p, this.q, 0, 0);
 
+    // calculate transformations
+    const transformations = this.transformations(originPolygon);
+
+    // apply transformations to fundamental polygon
+    const polygons = transformations.map(transformation => {
+      return originPolygon.transform(transformation);
+    });
+
+    return polygons;
+  }
+  transformations(originPolygon) {
     // identity transformation
     const identity = Moebius.identity();
 
+    // calculate neighbour transformations
+    const neighbourTransformations = this.neighbourTransformations(originPolygon);
+
+    // calculate depth levels of transformations
+    let transformations = [identity];
+    for (let i = 0; i < this.depth; i++) {
+      transformations = this.iterateTransformations(transformations, neighbourTransformations)
+    }
+
+    return transformations;
+  }
+
+  neighbourTransformations(originPolygon) {
     // calculate the translations that map the points of
     // the originPolygon to the centre
     const translations = originPolygon._points.map(c => PoincareIsometry.translation(c))
@@ -56,13 +80,28 @@ class PoincareTiling {
       );
     });
 
-    // first iteration
-    const neighbours = transformationsNeighbours.map(transformation => {
-      return originPolygon.transform(transformation);
-    })
-
-    // return all polygons
-    return [originPolygon, ...neighbours];
+    return transformationsNeighbours;
+  }
+  iterateTransformations(previousTransformations, neighbourTransformations) {
+    // calculate transformations by composing
+    // * a member of previousTransformations
+    // * a member of neighbourTransformations
+    const transformationsNext = [...previousTransformations];
+    previousTransformations.forEach(previousTransformation => {
+      neighbourTransformations.forEach(neighbourTransformation => {
+        const candidate = Moebius.compose(
+          previousTransformation.inverse(),
+          neighbourTransformation,
+          previousTransformation,
+        );
+        // conditionally add the transformation
+        const alreadyExists = transformationsNext.find(transformation => Moebius.equal(transformation, candidate));
+        if (!alreadyExists) {
+          transformationsNext.push(candidate);
+        }
+      })
+    });
+    return transformationsNext;
   }
 }
 
