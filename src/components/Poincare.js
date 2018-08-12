@@ -72,7 +72,6 @@ class Poincare extends React.Component {
 
     // render polygons
     polygons.forEach(polygon => {
-
       // render polygon points
       context.fillStyle = randomColor();
       polygon._points.forEach(point => {
@@ -81,7 +80,6 @@ class Poincare extends React.Component {
         context.fill();
       });
 
-
       // render polygons
       context.strokeStyle = randomColor();
 
@@ -89,11 +87,13 @@ class Poincare extends React.Component {
       const points = polygon._points;
       const edges = polygon._edges;
       
+      let startPoint;
       context.beginPath();
       edges.forEach((edge, i) => {
         // move to start
         if (i === 0) {
-          context.moveTo(points[edge[0]].re * R, points[edge[0]].im * R);
+          startPoint = points[edge[0]];
+          context.moveTo(startPoint.re * R, startPoint.im * R);
         }
 
         // calculate circle/line info
@@ -102,32 +102,18 @@ class Poincare extends React.Component {
           points[edge[1]]
         );
 
-      //   // // render depending on type
-      //   // if (info.type === 'line') {
-      //   //   context.lineTo(info.x2, info.y2);
-      //   // } else if (info.type === 'circle') {
-      //   //   // const { x1, y1, x2, y2, r } = info;
-      //   //   // context.arcTo(x1, y1, x2, y2, r)
-      //   //   const { x, y, r: radius, startAngle, endAngle, antiClockwise } = info;
-      //   //   // console.log(info)
-      //   //   context.arc(x, y, radius, startAngle, endAngle, antiClockwise)
-      //   // }
-
-        // debug
-        context.lineTo(info.x2 * R, info.y2 * R);
-
-      //   // render
-      //   // if (i === edges.length - 1) {
-      //   //   context.closePath();
-      //   //   // context.fill();
-      //   //   context.stroke();
-      //   // }
+        // render depending on type
+        if (info.type === 'line') {
+          context.lineTo(info.x2 * R, info.y2 * R);
+        } else if (info.type === 'circle') {
+          const { x, y, r, startAngle, endAngle, antiClockwise } = info;
+          context.arc(x * R, y * R, r * R, startAngle, endAngle, antiClockwise)
+        }
       })
+      context.lineTo(startPoint.re * R, startPoint.im * R);
       context.closePath();
       context.fill();
       // context.stroke();
-
-      // context.restore();
     });
     
     context.restore()
