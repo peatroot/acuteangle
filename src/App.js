@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 
-import Splash from './components/Splash';
+import Poincare from './components/Poincare';
 
 class App extends Component {
   render() {
-    return <Splash />;
+    return <Poincare />
   }
 }
 
