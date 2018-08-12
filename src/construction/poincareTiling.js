@@ -23,13 +23,12 @@ class PoincareTiling {
     const q = this.q;
     const radius = this.radius;
     const qIndices = this.qIndices;
+    const qAngle = math.divide(2 * Math.PI, q);
     const polygons = qIndices.map(i => {
-      const polygon = PoincarePolygon.atOrigin(p, radius, i, 0);
-      const qAngle = math.divide(2 * Math.PI, q);
+      const polygon = PoincarePolygon.atOrigin(p, q, i, 0);
       const moebius = Moebius.compose(
-        // PoincareIsometry.translation(polygon.points()[polygon._orientation]),
+        PoincareIsometry.rotationAntiClockwiseAboutOrigin(qAngle * i),
         PoincareIsometry.translation(polygon._points[0]),
-        PoincareIsometry.rotationAntiClockwiseAboutOrigin(qAngle)
       );
       return polygon.transform(moebius);
     });

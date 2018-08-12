@@ -29,10 +29,23 @@ class PoincarePolygon {
       depth: this._depth
     });
   }
-  static atOrigin(p, radius, orientation, depth) {
-    const theta = math.divide(2 * Math.PI, p);
+
+  static atOrigin(p, q, orientation, depth) {
+    // calculate half angles
+    const thetaP = Math.PI / p;
+    const thetaQ = Math.PI / q;
+    const right = Math.PI / 2;
+
+    // calculate distance from origin to polygon vertices
+    const sinP = Math.sin(thetaP);
+    const sinQ = Math.sin(thetaQ);
+    const d = Math.sin(right - thetaP - thetaQ) / Math.sqrt(1 - sinP * sinP - sinQ * sinQ);
+
+    // calculate points coordinates
     const ps = Array.from(Array(p).keys());
-    const points = ps.map(i => math.type.Complex.fromPolar(radius, i * theta));
+    const points = ps.map(i => math.type.Complex.fromPolar(d, 2 * i * thetaP));
+
+    // calculate edges
     const edges = [];
     ps.forEach(i => {
       const iPlus1 = (i === p - 1) ? 0 : i + 1;
