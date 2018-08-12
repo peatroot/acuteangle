@@ -22,6 +22,14 @@ class Moebius {
     const m = math.divide(numerator, denominator);
     return m;
   }
+  inverse() {
+    return new Moebius({
+      a: this.d,
+      b: math.unaryMinus(this.b),
+      c: math.unaryMinus(this.c),
+      d: this.a
+    });
+  }
   toMatrix() {
     return math.matrix([
       [this.a, this.b],
@@ -35,9 +43,15 @@ class Moebius {
     const d = math.subset(matrix, math.index(1, 1));
     return new Moebius({ a, b, c, d });
   }
-  static compose(m1, m2) {
-    const prod = math.multiply(m1.toMatrix(), m2.toMatrix());
+  static compose(...ms) {
+    const mats = ms.map(m => m.toMatrix());
+    const prod = mats.reduce((acc, mat) => {
+      return math.multiply(acc, mat);
+    }, math.matrix([[1, 0], [0, 1]]));
     return Moebius.fromMatrix(prod);
+  }
+  static identity() {
+    return new Moebius({a: 1, b: 0, c: 0, d: 1});
   }
 }
 
