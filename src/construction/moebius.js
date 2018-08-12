@@ -53,6 +53,14 @@ class Moebius {
   static identity() {
     return new Moebius({a: 1, b: 0, c: 0, d: 1});
   }
+  static equal(m1, m2) {
+    return (
+      math.equal(m1.a, m2.a) &&
+      math.equal(m1.b, m2.b) &&
+      math.equal(m1.c, m2.c) &&
+      math.equal(m1.d, m2.d)
+    );
+  }
 }
 
 export default Moebius;
