@@ -9,7 +9,7 @@ class Poincare extends React.Component {
   constructor(props) {
     super(props);
     this.canvasRef = React.createRef();
-    this.tiling = new PoincareTiling({ p: 4, q: 5, depth: 5, radius: 0.269 });
+    this.tiling = new PoincareTiling({ p: 5, q: 4, depth: 2, radius: 0.269 });
   }
   componentDidMount() {
     this._render();
@@ -50,8 +50,10 @@ class Poincare extends React.Component {
       return;
     }
 
-    context.fillStyle = "yellow";
-    context.strokeStyle = "green";
+    context.translate(0.5, 0.5);
+
+    context.fillStyle = "white";
+    context.strokeStyle = "black";
 
     // ctx.arc(x, y, radius, startAngle, endAngle, anticlockwise);
     // ctx.translate(10 + j * 50, 10 + i * 50);
