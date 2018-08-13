@@ -18,21 +18,6 @@ class PoincareTiling {
     this.pIndices = Array.from(Array(p).keys());
     this.qIndices = Array.from(Array(q).keys());
   }
-  initialPolygons() {
-    const p = this.p;
-    const q = this.q;
-    const qIndices = this.qIndices;
-    const qAngle = math.divide(2 * Math.PI, q);
-    const polygons = qIndices.map(i => {
-      const polygon = PoincarePolygon.atOrigin(p, q, i, 0);
-      const moebius = Moebius.compose(
-        PoincareIsometry.rotationAntiClockwiseAboutOrigin(qAngle * i),
-        PoincareIsometry.translation(polygon._points[0]),
-      );
-      return polygon.transform(moebius);
-    });
-    return polygons
-  }
   polygons() {
     // calculate polygon centred at origin
     const originPolygon = PoincarePolygon.atOrigin(this.p, this.q, 0, 0);
@@ -55,9 +40,13 @@ class PoincareTiling {
     const neighbourTransformations = this.neighbourTransformations(originPolygon);
 
     // calculate depth levels of transformations
-    let transformations = [identity];
+    let transformations = [];
+    let coronaTransformations = [identity];
     for (let i = 0; i < this.depth; i++) {
-      transformations = this.iterateTransformations(transformations, neighbourTransformations)
+      const iteration = this.iterateTransformations(transformations, coronaTransformations, neighbourTransformations)
+      transformations = iteration.transformations;
+      coronaTransformations = iteration.coronaTransformations;
+      console.log('(total, corona)', transformations.length, coronaTransformations.length)
     }
 
     return transformations;
@@ -69,39 +58,52 @@ class PoincareTiling {
     const translations = originPolygon._points.map(c => PoincareIsometry.translation(c))
 
     // calculate the fundamental rotations (order p, q)
-    const rotationQ = PoincareIsometry.rotationAntiClockwiseAboutOrigin(2 * Math.PI / this.q);
+    // const rotationQ = PoincareIsometry.rotationAntiClockwiseAboutOrigin(2 * Math.PI / this.q);
+    const rotations = this.qIndices.map(i => {
+      return PoincareIsometry.rotationAntiClockwiseAboutOrigin(2 * Math.PI * i / this.q);
+    });
 
     // calculate transformations to generate neighbours of originPolygon
-    const transformationsNeighbours = translations.map((translation, i) => {
-      return Moebius.compose(
-        translation.inverse(),
-        rotationQ,
-        translation,
-      );
+    const transformationsNeighbours = [];
+    translations.forEach(translation => {
+      rotations.forEach(rotation => {
+        const transformation = Moebius.compose(
+          translation.inverse(),
+          rotation,
+          translation,
+        );
+        transformationsNeighbours.push(transformation)
+      });
     });
 
     return transformationsNeighbours;
   }
-  iterateTransformations(previousTransformations, neighbourTransformations) {
+  iterateTransformations(previousTransformations, coronaTransformations, neighbourTransformations) {
     // calculate transformations by composing
-    // * a member of previousTransformations
+    // * a member of coronaTransformations
     // * a member of neighbourTransformations
-    const transformationsNext = [...previousTransformations];
-    previousTransformations.forEach(previousTransformation => {
+    const transformationsNextCorona = [];
+    const transformations = [...previousTransformations];
+    coronaTransformations.forEach(coronaTransformation => {
       neighbourTransformations.forEach(neighbourTransformation => {
         const candidate = Moebius.compose(
-          previousTransformation.inverse(),
+          coronaTransformation,
           neighbourTransformation,
-          previousTransformation,
+          coronaTransformation.inverse(),
         );
         // conditionally add the transformation
-        const alreadyExists = transformationsNext.find(transformation => Moebius.equal(transformation, candidate));
+        const alreadyExists = previousTransformations.find(transformation => Moebius.equal(transformation, candidate));
         if (!alreadyExists) {
-          transformationsNext.push(candidate);
+          transformationsNextCorona.push(candidate);
+          transformations.push(candidate);
         }
       })
     });
-    return transformationsNext;
+
+    return {
+      coronaTransformations: transformationsNextCorona,
+      transformations
+    }
   }
 }
 
