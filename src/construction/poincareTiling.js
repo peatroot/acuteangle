@@ -92,8 +92,9 @@ class PoincareTiling {
           coronaTransformation.inverse(),
         );
         // conditionally add the transformation
-        const alreadyExists = previousTransformations.find(transformation => Moebius.equal(transformation, candidate));
-        if (!alreadyExists) {
+        const alreadyExistsInPrevious = previousTransformations.find(transformation => Moebius.equal(transformation, candidate));
+        const alreadyExistsInNextCorona = transformationsNextCorona.find(transformation => Moebius.equal(transformation, candidate));
+        if (!alreadyExistsInPrevious && !alreadyExistsInNextCorona) {
           transformationsNextCorona.push(candidate);
           transformations.push(candidate);
         }
