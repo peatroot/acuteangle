@@ -6,7 +6,8 @@ const rotateArray = (array, n) => {
 };
 
 class PoincarePolygon {
-  constructor({ points, edges, orientation, depth }) {
+  constructor({ centre, points, edges, orientation, depth }) {
+    this._centre = centre;
     this._points = points;
     this._edges = edges;
     this._orientation = orientation;
@@ -22,7 +23,9 @@ class PoincarePolygon {
   }
   transform(m) {
     const points = this._points.map(c => m.multiply(c));
+    const centre = m.multiply(this._centre);
     return new PoincarePolygon({
+      centre,
       points,
       edges: this._edges,
       orientation: this._orientation,
@@ -60,7 +63,11 @@ class PoincarePolygon {
       const edge = [i, iPlus1];
       edges.push(edge);
     });
-    return new PoincarePolygon({ points, edges, orientation, depth });
+
+    // centre
+    const centre = math.complex(0, 0);
+
+    return new PoincarePolygon({ centre, points, edges, orientation, depth });
   }
 }
 

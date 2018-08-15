@@ -72,8 +72,20 @@ class Poincare extends React.Component {
     // generate polygons
     const polygons = this.tiling.polygons();
 
+    // // DEBUG
+    // polygons.sort(function(a, b){
+    //   if (a.p !== b.p) {
+    //     return a.p-b.p;
+    //   } else {
+    //     return a.q-b.q;
+    //   }
+    // });
+
     // render polygons
     polygons.forEach(polygon => {
+      // // DEBUG
+      // console.log(polygon.p, polygon.q, polygon._centre);
+
       // render polygon points
       context.fillStyle = randomColor();
       polygon._points.forEach(point => {
