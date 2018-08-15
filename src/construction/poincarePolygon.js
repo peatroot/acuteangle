@@ -29,8 +29,7 @@ class PoincarePolygon {
       depth: this._depth
     });
   }
-
-  static atOrigin(p, q, orientation, depth) {
+  static radius(p, q) {
     // calculate half angles
     const thetaP = Math.PI / p;
     const thetaQ = Math.PI / q;
@@ -40,6 +39,15 @@ class PoincarePolygon {
     const sinP = Math.sin(thetaP);
     const sinQ = Math.sin(thetaQ);
     const d = Math.sin(right - thetaP - thetaQ) / Math.sqrt(1 - sinP * sinP - sinQ * sinQ);
+
+    return d
+  }
+  static atOrigin(p, q, orientation, depth) {
+    // calculate half angle
+    const thetaP = Math.PI / p;
+    
+    // calculate radius
+    const d = PoincarePolygon.radius(p, q);
 
     // calculate points coordinates
     const ps = Array.from(Array(p).keys());
