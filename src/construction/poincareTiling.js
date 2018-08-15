@@ -17,6 +17,7 @@ class PoincareTiling {
     this.radius = radius;
     this.pIndices = Array.from(Array(p).keys());
     this.qIndices = Array.from(Array(q).keys());
+    this.pqIndices = Array.from(Array(p * q).keys());
   }
   polygons() {
     // calculate polygon centred at origin
@@ -27,7 +28,10 @@ class PoincareTiling {
 
     // apply transformations to fundamental polygon
     const polygons = transformations.map(transformation => {
-      return originPolygon.transform(transformation);
+      const polygon = originPolygon.transform(transformation);
+      polygon.p = transformation.p;
+      polygon.q = transformation.q;
+      return polygon;
     });
 
     return polygons;
@@ -35,8 +39,8 @@ class PoincareTiling {
   transformations(originPolygon) {
     // identity transformation
     const I = Moebius.identity();
-    I.p = 0;
-    I.q = 0;
+    I.p = this.p;
+    I.q = this.q;
 
     // neighbour transformations
     const Ns = this.rootNeighbours();
@@ -57,8 +61,8 @@ class PoincareTiling {
     // create a new transformation by composing two others
     // C in the corona, N in the root neighbours
     const M = Moebius.compose(C, N);
-    M.p = C.p + N.p % this.p;
-    M.q = C.q + N.q % this.q;
+    M.p = (C.p + N.p) % this.p;
+    M.q = (C.q + N.q) % this.q;
     return M;
   }
   rootTranslation() {
@@ -93,18 +97,28 @@ class PoincareTiling {
     const Ps = this.rootRotationsP();
     const Qs = this.rootRotationsQ();
     const Ns = [];
+    const visited = [];
     Ps.forEach(P => {
       Qs.forEach(Q => {
-        const N = Moebius.compose(
-          P,
-          T.inverse(),
-          Q,
-          T,
-          
-        );
-        N.p = P.p;
-        N.q = Q.q;
-        Ns.push(N)
+        // avoid overcounting identity
+        const isIdentityEquivalent = Q.q === 0;
+
+        // avoid overcounting neighbour transforms sharing edge
+        const hasSharedEdge = Q.q === this.q - 1;
+
+        const hasBeenVisited = isIdentityEquivalent || hasSharedEdge;
+        if (!hasBeenVisited) {
+          const N = Moebius.compose(
+            P,
+            T.inverse(),
+            Q,
+            T,
+          );
+          N.p = P.p;
+          N.q = Q.q;
+          Ns.push(N)
+          visited.push({ p: P.p, q: Q.q });
+        }
       });
     });
     return Ns;
