@@ -34,76 +34,104 @@ class PoincareTiling {
   }
   transformations(originPolygon) {
     // identity transformation
-    const identity = Moebius.identity();
+    const I = Moebius.identity();
+    I.p = 0;
+    I.q = 0;
 
-    // calculate neighbour transformations
-    const neighbourTransformations = this.neighbourTransformations(originPolygon);
+    // neighbour transformations
+    const Ns = this.rootNeighbours();
 
     // calculate depth levels of transformations
-    let transformations = [];
-    let coronaTransformations = [identity];
+    let Ts = [I];
+    let Cs = [I];
     for (let i = 0; i < this.depth; i++) {
-      const iteration = this.iterateTransformations(transformations, coronaTransformations, neighbourTransformations)
-      transformations = iteration.transformations;
-      coronaTransformations = iteration.coronaTransformations;
-      console.log('(total, corona)', transformations.length, coronaTransformations.length)
+      const iteration = this.iterate(Ts, Cs, Ns)
+      Ts = iteration.allTransformations;
+      Cs = iteration.coronaTransformations;
+      console.log('(total, corona)', Ts.length, Cs.length)
     }
 
-    return transformations;
+    return Ts;
   }
-
-  neighbourTransformations(originPolygon) {
-    // calculate the translations that map the points of
-    // the originPolygon to the centre
-    const translations = originPolygon._points.map(c => PoincareIsometry.translation(c))
-
-    // calculate the fundamental rotations (order p, q)
-    // const rotationQ = PoincareIsometry.rotationAntiClockwiseAboutOrigin(2 * Math.PI / this.q);
-    const rotations = this.qIndices.map(i => {
-      return PoincareIsometry.rotationAntiClockwiseAboutOrigin(2 * Math.PI * i / this.q);
+  compose(C, N) {
+    // create a new transformation by composing two others
+    // C in the corona, N in the root neighbours
+    const M = Moebius.compose(C, N);
+    M.p = C.p + N.p % this.p;
+    M.q = C.q + N.q % this.q;
+    return M;
+  }
+  rootTranslation() {
+    // calculate the translation that maps the point (d, 0)
+    // to (0, 0), where d is originPolygon's radius
+    const d = PoincarePolygon.radius({ p: this.p, q: this.q });
+    const c = math.complex(d, 0);
+    return PoincareIsometry.translation(c);
+  }
+  rootRotationsP() {
+    // calculate the rotations about the origin by 2 * PI / p
+    const theta = 2 * Math.PI / this.p;
+    return this.pIndices.map(i => {
+      const rotation = PoincareIsometry.rotationAntiClockwiseAboutOrigin(theta * i);
+      rotation.p = i;
+      return rotation;
     });
-
-    // calculate transformations to generate neighbours of originPolygon
-    const transformationsNeighbours = [];
-    translations.forEach(translation => {
-      rotations.forEach(rotation => {
-        const transformation = Moebius.compose(
-          translation.inverse(),
-          rotation,
-          translation,
+  }
+  rootRotationsQ() {
+    // calculate the rotations about the origin by 2 * PI / q
+    const theta = 2 * Math.PI / this.q;
+    return this.qIndices.map(i => {
+      const rotation = PoincareIsometry.rotationAntiClockwiseAboutOrigin(theta * i);
+      rotation.q = i;
+      return rotation;
+    });
+  }
+  rootNeighbours() {
+    // calculate the transformations mapping one polygon to its
+    // neighbours; there are p * q of them
+    const T = this.rootTranslation();
+    const Ps = this.rootRotationsP();
+    const Qs = this.rootRotationsQ();
+    const Ns = [];
+    Ps.forEach(P => {
+      Qs.forEach(Q => {
+        const N = Moebius.compose(
+          P,
+          T.inverse(),
+          Q,
+          T,
+          
         );
-        transformationsNeighbours.push(transformation)
+        N.p = P.p;
+        N.q = Q.q;
+        Ns.push(N)
       });
     });
-
-    return transformationsNeighbours;
+    return Ns;
   }
-  iterateTransformations(previousTransformations, coronaTransformations, neighbourTransformations) {
+  iterate(Ts, Cs, Ns) {
     // calculate transformations by composing
-    // * a member of coronaTransformations
-    // * a member of neighbourTransformations
-    const transformationsNextCorona = [];
-    const transformations = [...previousTransformations];
-    coronaTransformations.forEach(coronaTransformation => {
-      neighbourTransformations.forEach(neighbourTransformation => {
-        const candidate = Moebius.compose(
-          coronaTransformation,
-          neighbourTransformation,
-          coronaTransformation.inverse(),
-        );
+    // * a member of Cs
+    // * a member of Ns
+    // and do not repeat if in Ts
+    const C1s = [];
+    const T1s = [...Ts];
+    Cs.forEach(C => {
+      Ns.forEach(N => {
+        const C1 = this.compose(C, N);
         // conditionally add the transformation
-        const alreadyExistsInPrevious = previousTransformations.find(transformation => Moebius.equal(transformation, candidate));
-        const alreadyExistsInNextCorona = transformationsNextCorona.find(transformation => Moebius.equal(transformation, candidate));
-        if (!alreadyExistsInPrevious && !alreadyExistsInNextCorona) {
-          transformationsNextCorona.push(candidate);
-          transformations.push(candidate);
+        const alreadyExistsInT1s = T1s.find(T => Moebius.equal(T, C1));
+        const alreadyExistsInC1s = C1s.find(T => Moebius.equal(T, C1));
+        if (!alreadyExistsInT1s && !alreadyExistsInC1s) {
+          C1s.push(C1);
+          T1s.push(C1);
         }
       })
     });
 
     return {
-      coronaTransformations: transformationsNextCorona,
-      transformations
+      coronaTransformations: C1s,
+      allTransformations: T1s
     }
   }
 }

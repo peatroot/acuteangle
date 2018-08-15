@@ -29,7 +29,7 @@ class PoincarePolygon {
       depth: this._depth
     });
   }
-  static radius(p, q) {
+  static radius({ p, q }) {
     // calculate half angles
     const thetaP = Math.PI / p;
     const thetaQ = Math.PI / q;
@@ -47,7 +47,7 @@ class PoincarePolygon {
     const thetaP = Math.PI / p;
     
     // calculate radius
-    const d = PoincarePolygon.radius(p, q);
+    const d = PoincarePolygon.radius({ p, q });
 
     // calculate points coordinates
     const ps = Array.from(Array(p).keys());
