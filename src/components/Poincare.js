@@ -9,7 +9,9 @@ class Poincare extends React.Component {
   constructor(props) {
     super(props);
     this.canvasRef = React.createRef();
-    this.tiling = new PoincareTiling({ p: 5, q: 4, depth: 2, radius: 0.269 });
+    this.p = 5;
+    this.q = 4;
+    this.tiling = new PoincareTiling({ p: this.p, q: this.q, depth: 3, radius: 0.269 });
   }
   componentDidMount() {
     this._render();
@@ -87,7 +89,7 @@ class Poincare extends React.Component {
       // console.log(polygon.p, polygon.q, polygon._centre);
 
       // render polygon points
-      context.fillStyle = randomColor();
+      context.fillStyle = 'white';
       polygon._points.forEach(point => {
         context.beginPath();
         context.arc(point.re * R, point.im * R, 2, 0, Math.PI * 2, true);
@@ -95,7 +97,8 @@ class Poincare extends React.Component {
       });
 
       // render polygons
-      context.strokeStyle = randomColor();
+      context.fillStyle = randomColor();
+      context.strokeStyle = 'white';
 
       // context.beginPath();
       const points = polygon._points;
@@ -127,7 +130,7 @@ class Poincare extends React.Component {
       context.lineTo(startPoint.re * R, startPoint.im * R);
       context.closePath();
       context.fill();
-      // context.stroke();
+      context.stroke();
     });
     
     context.restore()
