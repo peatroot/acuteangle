@@ -5,6 +5,9 @@ import * as d3 from 'd3';
 import PoincareTiling from '../construction/poincareTiling';
 import PoincareGeodesic from '../construction/PoincareGeodesic';
 
+const COLOR1 = '#fa9';
+const COLOR2 = '#9af';
+
 class Poincare extends React.Component {
   constructor(props) {
     super(props);
@@ -97,7 +100,7 @@ class Poincare extends React.Component {
       const M = midpoints[edge[0]];
 
       // T1
-      context.fillStyle = '#f99'
+      context.fillStyle = COLOR1
       context.beginPath();
       context.moveTo(O.re * R, O.im * R);
       this._renderGeodesic(context, O, A, R);
@@ -107,7 +110,7 @@ class Poincare extends React.Component {
       context.fill();
 
       // T2
-      context.fillStyle = '#9f9'
+      context.fillStyle = COLOR2
       context.beginPath();
       context.moveTo(O.re * R, O.im * R);
       this._renderGeodesic(context, O, M, R);
