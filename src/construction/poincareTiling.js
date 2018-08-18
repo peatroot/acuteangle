@@ -24,7 +24,7 @@ class PoincareTiling {
     const originPolygon = PoincarePolygon.atOrigin(this.p, this.q, 0, 0);
 
     // calculate transformations
-    const transformations = this.transformations(originPolygon);
+    const transformations = this.transformations();
 
     // apply transformations to fundamental polygon
     const polygons = transformations.map(transformation => {
@@ -36,7 +36,7 @@ class PoincareTiling {
 
     return polygons;
   }
-  transformations(originPolygon) {
+  transformations() {
     // identity transformation
     const I = Moebius.identity();
     I.p = this.p;
@@ -133,6 +133,7 @@ class PoincareTiling {
     Cs.forEach(C => {
       Ns.forEach(N => {
         const C1 = this.compose(C, N);
+
         // conditionally add the transformation
         const alreadyExistsInT1s = T1s.find(T => Moebius.equal(T, C1));
         const alreadyExistsInC1s = C1s.find(T => Moebius.equal(T, C1));

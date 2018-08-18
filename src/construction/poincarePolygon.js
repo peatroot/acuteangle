@@ -1,33 +1,29 @@
 import * as math from 'mathjs';
-import PoincareIsometry from './poincareIsometry';
-
-const rotateArray = (array, n) => {
-  return array.slice(n, array.length).concat(array.slice(0, n));
-};
 
 class PoincarePolygon {
-  constructor({ centre, points, edges, orientation, depth }) {
+  constructor({ centre, points, edges, midpoints, orientation, depth }) {
     this._centre = centre;
     this._points = points;
     this._edges = edges;
+    this._midpoints = midpoints;
     this._orientation = orientation;
     this._depth = depth;
   }
   points() {
     return this._points;
-    // return rotateArray(this._points, this._orientation);
   }
   edges() {
     return this._edges;
-    // return rotateArray(this._edges, this._orientation);
   }
   transform(m) {
     const points = this._points.map(c => m.multiply(c));
+    const midpoints = this._midpoints.map(c => m.multiply(c));
     const centre = m.multiply(this._centre);
     return new PoincarePolygon({
       centre,
       points,
       edges: this._edges,
+      midpoints,
       orientation: this._orientation,
       depth: this._depth
     });
@@ -48,13 +44,19 @@ class PoincarePolygon {
   static atOrigin(p, q, orientation, depth) {
     // calculate half angle
     const thetaP = Math.PI / p;
+    const thetaQ = Math.PI / q;
     
     // calculate radius
     const d = PoincarePolygon.radius({ p, q });
 
+    // calculate radius of midpoint
+    const mH = Math.acosh(Math.cos(thetaQ) / Math.sin(thetaP));
+    const m = Math.tanh(mH / 2);
+
     // calculate points coordinates
     const ps = Array.from(Array(p).keys());
     const points = ps.map(i => math.type.Complex.fromPolar(d, 2 * i * thetaP));
+    const midpoints = ps.map(i => math.type.Complex.fromPolar(m, (2 * i + 1) * thetaP));
 
     // calculate edges
     const edges = [];
@@ -67,7 +69,7 @@ class PoincarePolygon {
     // centre
     const centre = math.complex(0, 0);
 
-    return new PoincarePolygon({ centre, points, edges, orientation, depth });
+    return new PoincarePolygon({ centre, points, edges, midpoints, orientation, depth });
   }
 }
 

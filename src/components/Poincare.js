@@ -11,7 +11,7 @@ class Poincare extends React.Component {
     this.canvasRef = React.createRef();
     this.p = 5;
     this.q = 4;
-    this.tiling = new PoincareTiling({ p: this.p, q: this.q, depth: 3, radius: 0.269 });
+    this.tiling = new PoincareTiling({ p: this.p, q: this.q, depth: 2, radius: 0.269 });
   }
   componentDidMount() {
     this._render();
@@ -43,8 +43,6 @@ class Poincare extends React.Component {
     canvas
       .attr('width', width)
       .attr('height', height)
-      // .style('width', `${width}px`)
-      // .style('height', `${height}px`);
 
     // get context
     const context = canvas.node().getContext("2d");
@@ -53,87 +51,130 @@ class Poincare extends React.Component {
     }
 
     context.translate(0.5, 0.5);
-
     context.fillStyle = "white";
     context.strokeStyle = "black";
-
-    // ctx.arc(x, y, radius, startAngle, endAngle, anticlockwise);
-    // ctx.translate(10 + j * 50, 10 + i * 50);
-
     context.fillRect(0, 0, width, height);
-
     context.translate(width / 2, height / 2);
     context.save();
 
     // boundary circle
-    context.beginPath();
-    context.arc(0, 0, R, 0, Math.PI * 2, true);
-    context.closePath();
-    context.stroke();
+    this._renderBoundaryCircle(context, R)
 
     // generate polygons
     const polygons = this.tiling.polygons();
 
-    // // DEBUG
-    // polygons.sort(function(a, b){
-    //   if (a.p !== b.p) {
-    //     return a.p-b.p;
-    //   } else {
-    //     return a.q-b.q;
-    //   }
-    // });
-
     // render polygons
-    polygons.forEach(polygon => {
-      // // DEBUG
-      // console.log(polygon.p, polygon.q, polygon._centre);
-
-      // render polygon points
-      context.fillStyle = 'white';
-      polygon._points.forEach(point => {
-        context.beginPath();
-        context.arc(point.re * R, point.im * R, 2, 0, Math.PI * 2, true);
-        context.fill();
-      });
-
-      // render polygons
-      context.fillStyle = randomColor();
-      context.strokeStyle = 'white';
-
-      // context.beginPath();
-      const points = polygon._points;
-      const edges = polygon._edges;
-      
-      let startPoint;
-      context.beginPath();
-      edges.forEach((edge, i) => {
-        // move to start
-        if (i === 0) {
-          startPoint = points[edge[0]];
-          context.moveTo(startPoint.re * R, startPoint.im * R);
-        }
-
-        // calculate circle/line info
-        const info = PoincareGeodesic.renderInfo(
-          points[edge[0]],
-          points[edge[1]]
-        );
-
-        // render depending on type
-        if (info.type === 'line') {
-          context.lineTo(info.x2 * R, info.y2 * R);
-        } else if (info.type === 'circle') {
-          const { x, y, r, startAngle, endAngle, antiClockwise } = info;
-          context.arc(x * R, y * R, r * R, startAngle, endAngle, antiClockwise)
-        }
-      })
-      context.lineTo(startPoint.re * R, startPoint.im * R);
-      context.closePath();
-      context.fill();
-      context.stroke();
-    });
+    this._renderPolygonsRightTriangles(context, polygons, R);
+    // this._renderPolygonsSolid(context, polygons, R);
     
     context.restore()
+  }
+  _renderBoundaryCircle(context, R) {
+    context.beginPath();
+    context.arc(0, 0, R, 0, Math.PI * 2, true);
+    context.closePath();
+    context.stroke();
+  }
+  _renderPolygonsRightTriangles(context, polygons, R) {
+    polygons.forEach(polygon => {
+      this._renderPolygonRightTriangles(context, polygon, R)
+    });
+  }
+  _renderPolygonRightTriangles(context, polygon, R) {
+    // render polygons
+    context.strokeStyle = 'white';
+
+    const points = polygon._points;
+    const midpoints = polygon._midpoints;
+    const edges = polygon._edges;
+    const O = polygon._centre;
+
+    edges.forEach((edge, i) => {
+      // render two right triangles, T1 = OAM, T2 = OMB,
+      // using M = midpoint of AB
+      const A = points[edge[0]];
+      const B = points[edge[1]];
+      const M = midpoints[edge[0]];
+
+      // T1
+      context.fillStyle = '#f99'
+      context.beginPath();
+      context.moveTo(O.re * R, O.im * R);
+      this._renderGeodesic(context, O, A, R);
+      this._renderGeodesic(context, A, M, R);
+      this._renderGeodesic(context, M, O, R);
+      context.closePath();
+      context.fill();
+
+      // T2
+      context.fillStyle = '#9f9'
+      context.beginPath();
+      context.moveTo(O.re * R, O.im * R);
+      this._renderGeodesic(context, O, M, R);
+      this._renderGeodesic(context, M, B, R);
+      this._renderGeodesic(context, B, O, R);
+      context.closePath();
+      context.fill();
+    })
+  }
+  _renderGeodesic(context, A, B, R) {
+    // calculate circle/line info
+    const info = PoincareGeodesic.renderInfo(A, B);
+    if (info.type === 'line') {
+      context.lineTo(info.x2 * R, info.y2 * R);
+    } else if (info.type === 'circle') {
+      const { x, y, r, startAngle, endAngle, antiClockwise } = info;
+      context.arc(x * R, y * R, r * R, startAngle, endAngle, antiClockwise)
+    }
+  }
+  _renderPolygonsSolid(context, polygons, R) {
+    polygons.forEach(polygon => {
+      this._renderPolygonSolid(context, polygon, R)
+    });
+  }
+  _renderPolygonSolid(context, polygon, R) {
+    // render polygon points
+    context.fillStyle = 'white';
+    polygon._points.forEach(point => {
+      context.beginPath();
+      context.arc(point.re * R, point.im * R, 2, 0, Math.PI * 2, true);
+      context.fill();
+    });
+
+    // render polygons
+    context.fillStyle = randomColor();
+    context.strokeStyle = 'white';
+
+    const points = polygon._points;
+    const edges = polygon._edges;
+
+    let startPoint;
+    context.beginPath();
+    edges.forEach((edge, i) => {
+      // move to start
+      if (i === 0) {
+        startPoint = points[edge[0]];
+        context.moveTo(startPoint.re * R, startPoint.im * R);
+      }
+
+      // calculate circle/line info
+      const info = PoincareGeodesic.renderInfo(
+        points[edge[0]],
+        points[edge[1]]
+      );
+
+      // render depending on type
+      if (info.type === 'line') {
+        context.lineTo(info.x2 * R, info.y2 * R);
+      } else if (info.type === 'circle') {
+        const { x, y, r, startAngle, endAngle, antiClockwise } = info;
+        context.arc(x * R, y * R, r * R, startAngle, endAngle, antiClockwise)
+      }
+    })
+    context.lineTo(startPoint.re * R, startPoint.im * R);
+    context.closePath();
+    context.fill();
+    context.stroke();
   }
 }
 
