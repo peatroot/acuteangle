@@ -135,8 +135,8 @@ class PoincareTiling {
         const C1 = this.compose(C, N);
 
         // conditionally add the transformation
-        const alreadyExistsInT1s = T1s.find(T => Moebius.equal(T, C1));
-        const alreadyExistsInC1s = C1s.find(T => Moebius.equal(T, C1));
+        const alreadyExistsInT1s = T1s.find(T => Moebius.originMapEqual(T, C1));
+        const alreadyExistsInC1s = C1s.find(T => Moebius.originMapEqual(T, C1));
         if (!alreadyExistsInT1s && !alreadyExistsInC1s) {
           C1s.push(C1);
           T1s.push(C1);
