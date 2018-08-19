@@ -4,8 +4,6 @@ import { withContentRect } from 'react-measure';
 import * as d3 from 'd3';
 
 import PoincareTiling from '../construction/poincareTiling';
-import PoincareGeodesic from '../construction/PoincareGeodesic';
-import PoincareCanvas from '../construction/poincareCanvas';
 
 class Poincare extends React.Component {
   constructor(props) {
