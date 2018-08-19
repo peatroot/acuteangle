@@ -1,3 +1,3 @@
-# Acute Angle
+# acuteangle
 
 Personal homepage.
