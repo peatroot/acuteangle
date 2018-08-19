@@ -39,7 +39,7 @@ class Poincare extends React.Component {
   _dimensions() {
     const { contentRect } = this.props;
     const { width } = contentRect.bounds;
-    const height = 800;
+    const height = 500;
     return { width, height };
   }
   _render() {
