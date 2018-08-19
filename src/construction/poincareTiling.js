@@ -50,7 +50,6 @@ class PoincareTiling {
       const iteration = this.iterate(Ts, Cs, Ns);
       Ts = iteration.allTransformations;
       Cs = iteration.coronaTransformations;
-      console.log('(total, corona)', Ts.length, Cs.length);
     }
 
     return Ts;
