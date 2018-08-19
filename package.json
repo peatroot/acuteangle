@@ -3,13 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@material-ui/core": "1.4.3",
     "d3": "5.5.0",
     "mathjs": "5.0.4",
     "prop-types": "15.6.2",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
-    "react-measure": "2.1.0"
+    "react-measure": "2.1.0",
+    "styled-components": "3.4.2"
   },
   "devDependencies": {
     "husky": "0.14.3",
