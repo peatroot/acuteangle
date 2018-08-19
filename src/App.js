@@ -48,8 +48,8 @@ class App extends Component {
   render() {
     return (
       <MainContainer>
-        <BannerTitle>acuteangle</BannerTitle>
-        <SubTitle>Homepage of Gareth Peat</SubTitle>
+        <BannerTitle>Homepage of Gareth Peat</BannerTitle>
+        <SubTitle />
         <PoincareContainer>
           <Poincare p={3} q={8} depth={3} renderPolygons={scheme1} />
           <Poincare p={3} q={7} depth={3} renderPolygons={scheme3} />
