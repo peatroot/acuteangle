@@ -64,29 +64,29 @@ class Poincare extends React.Component {
     context.save();
 
     // boundary circle
-    this._renderBoundaryCircle(context, R);
+    Poincare.renderBoundaryCircle(context, R);
 
     // generate polygons
     const polygons = this.tiling.polygons();
 
     // render polygons
-    // this._renderPolygonsRightTriangles(context, polygons, R);
-    this._renderPolygonsSolid(context, polygons, R);
+    // Poincare.renderPolygonsRightTriangles(context, polygons, R);
+    Poincare.renderPolygonsSolid(context, polygons, R);
 
     context.restore();
   }
-  _renderBoundaryCircle(context, R) {
+  static renderBoundaryCircle(context, R) {
     context.beginPath();
     context.arc(0, 0, R, 0, Math.PI * 2, true);
     context.closePath();
     context.stroke();
   }
-  _renderPolygonsRightTriangles(context, polygons, R) {
+  static renderPolygonsRightTriangles(context, polygons, R) {
     polygons.forEach(polygon => {
-      this._renderPolygonRightTriangles(context, polygon, R);
+      Poincare.renderPolygonRightTriangles(context, polygon, R);
     });
   }
-  _renderPolygonRightTriangles(context, polygon, R) {
+  static renderPolygonRightTriangles(context, polygon, R) {
     // render polygons
     context.strokeStyle = 'white';
 
@@ -106,9 +106,9 @@ class Poincare extends React.Component {
       context.fillStyle = COLOR1;
       context.beginPath();
       context.moveTo(O.re * R, O.im * R);
-      this._renderGeodesic(context, O, A, R);
-      this._renderGeodesic(context, A, M, R);
-      this._renderGeodesic(context, M, O, R);
+      Poincare.renderGeodesic(context, O, A, R);
+      Poincare.renderGeodesic(context, A, M, R);
+      Poincare.renderGeodesic(context, M, O, R);
       context.closePath();
       context.fill();
 
@@ -116,14 +116,14 @@ class Poincare extends React.Component {
       context.fillStyle = COLOR2;
       context.beginPath();
       context.moveTo(O.re * R, O.im * R);
-      this._renderGeodesic(context, O, M, R);
-      this._renderGeodesic(context, M, B, R);
-      this._renderGeodesic(context, B, O, R);
+      Poincare.renderGeodesic(context, O, M, R);
+      Poincare.renderGeodesic(context, M, B, R);
+      Poincare.renderGeodesic(context, B, O, R);
       context.closePath();
       context.fill();
     });
   }
-  _renderGeodesic(context, A, B, R) {
+  static renderGeodesic(context, A, B, R) {
     // calculate circle/line info
     const info = PoincareGeodesic.renderInfo(A, B);
     if (info.type === 'line') {
@@ -133,12 +133,12 @@ class Poincare extends React.Component {
       context.arc(x * R, y * R, r * R, startAngle, endAngle, antiClockwise);
     }
   }
-  _renderPolygonsSolid(context, polygons, R) {
+  static renderPolygonsSolid(context, polygons, R) {
     polygons.forEach(polygon => {
-      this._renderPolygonSolid(context, polygon, R);
+      Poincare.renderPolygonSolid(context, polygon, R);
     });
   }
-  _renderPolygonSolid(context, polygon, R) {
+  static renderPolygonSolid(context, polygon, R) {
     // render polygon points
     context.fillStyle = 'white';
     polygon._points.forEach(point => {
