@@ -25,7 +25,7 @@ class PoincarePolygon {
       edges: this._edges,
       midpoints,
       orientation: this._orientation,
-      depth: this._depth
+      depth: this._depth,
     });
   }
   static radius({ p, q }) {
@@ -37,15 +37,17 @@ class PoincarePolygon {
     // calculate distance from origin to polygon vertices
     const sinP = Math.sin(thetaP);
     const sinQ = Math.sin(thetaQ);
-    const d = Math.sin(right - thetaP - thetaQ) / Math.sqrt(1 - sinP * sinP - sinQ * sinQ);
+    const d =
+      Math.sin(right - thetaP - thetaQ) /
+      Math.sqrt(1 - sinP * sinP - sinQ * sinQ);
 
-    return d
+    return d;
   }
   static atOrigin(p, q, orientation, depth) {
     // calculate half angle
     const thetaP = Math.PI / p;
     const thetaQ = Math.PI / q;
-    
+
     // calculate radius
     const d = PoincarePolygon.radius({ p, q });
 
@@ -56,12 +58,14 @@ class PoincarePolygon {
     // calculate points coordinates
     const ps = Array.from(Array(p).keys());
     const points = ps.map(i => math.type.Complex.fromPolar(d, 2 * i * thetaP));
-    const midpoints = ps.map(i => math.type.Complex.fromPolar(m, (2 * i + 1) * thetaP));
+    const midpoints = ps.map(i =>
+      math.type.Complex.fromPolar(m, (2 * i + 1) * thetaP)
+    );
 
     // calculate edges
     const edges = [];
     ps.forEach(i => {
-      const iPlus1 = (i === p - 1) ? 0 : i + 1;
+      const iPlus1 = i === p - 1 ? 0 : i + 1;
       const edge = [i, iPlus1];
       edges.push(edge);
     });
@@ -69,7 +73,14 @@ class PoincarePolygon {
     // centre
     const centre = math.complex(0, 0);
 
-    return new PoincarePolygon({ centre, points, edges, midpoints, orientation, depth });
+    return new PoincarePolygon({
+      centre,
+      points,
+      edges,
+      midpoints,
+      orientation,
+      depth,
+    });
   }
 }
 

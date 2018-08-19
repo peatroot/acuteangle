@@ -11,14 +11,8 @@ class Moebius {
     this.d = d;
   }
   multiply(v) {
-    const numerator = math.add(
-      math.multiply(this.a, v),
-      this.b
-    );
-    const denominator = math.add(
-      math.multiply(this.c, v),
-      this.d
-    );
+    const numerator = math.add(math.multiply(this.a, v), this.b);
+    const denominator = math.add(math.multiply(this.c, v), this.d);
     const m = math.divide(numerator, denominator);
     return m;
   }
@@ -27,14 +21,11 @@ class Moebius {
       a: this.d,
       b: math.unaryMinus(this.b),
       c: math.unaryMinus(this.c),
-      d: this.a
+      d: this.a,
     });
   }
   toMatrix() {
-    return math.matrix([
-      [this.a, this.b],
-      [this.c, this.d]
-    ]);
+    return math.matrix([[this.a, this.b], [this.c, this.d]]);
   }
   static fromMatrix(matrix) {
     const a = math.subset(matrix, math.index(0, 0));
@@ -51,14 +42,11 @@ class Moebius {
     return Moebius.fromMatrix(prod);
   }
   static identity() {
-    return new Moebius({a: 1, b: 0, c: 0, d: 1});
+    return new Moebius({ a: 1, b: 0, c: 0, d: 1 });
   }
   static originMapEqual(m1, m2) {
     const O = math.complex(0, 0);
-    return math.equal(
-      m1.multiply(O),
-      m2.multiply(O)
-    );
+    return math.equal(m1.multiply(O), m2.multiply(O));
   }
   static equal(m1, m2) {
     return (

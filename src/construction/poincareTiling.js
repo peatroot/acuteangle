@@ -49,10 +49,10 @@ class PoincareTiling {
     let Ts = [I];
     let Cs = [I];
     for (let i = 0; i < this.depth; i++) {
-      const iteration = this.iterate(Ts, Cs, Ns)
+      const iteration = this.iterate(Ts, Cs, Ns);
       Ts = iteration.allTransformations;
       Cs = iteration.coronaTransformations;
-      console.log('(total, corona)', Ts.length, Cs.length)
+      console.log('(total, corona)', Ts.length, Cs.length);
     }
 
     return Ts;
@@ -60,7 +60,10 @@ class PoincareTiling {
   compose(C, N) {
     // create a new transformation by composing two others
     // C in the corona, N in the root neighbours
-    const M = Moebius.compose(C, N);
+    const M = Moebius.compose(
+      C,
+      N
+    );
     M.p = (C.p + N.p) % this.p;
     M.q = (C.q + N.q) % this.q;
     return M;
@@ -74,18 +77,22 @@ class PoincareTiling {
   }
   rootRotationsP() {
     // calculate the rotations about the origin by 2 * PI / p
-    const theta = 2 * Math.PI / this.p;
+    const theta = (2 * Math.PI) / this.p;
     return this.pIndices.map(i => {
-      const rotation = PoincareIsometry.rotationAntiClockwiseAboutOrigin(theta * i);
+      const rotation = PoincareIsometry.rotationAntiClockwiseAboutOrigin(
+        theta * i
+      );
       rotation.p = i;
       return rotation;
     });
   }
   rootRotationsQ() {
     // calculate the rotations about the origin by 2 * PI / q
-    const theta = 2 * Math.PI / this.q;
+    const theta = (2 * Math.PI) / this.q;
     return this.qIndices.map(i => {
-      const rotation = PoincareIsometry.rotationAntiClockwiseAboutOrigin(theta * i);
+      const rotation = PoincareIsometry.rotationAntiClockwiseAboutOrigin(
+        theta * i
+      );
       rotation.q = i;
       return rotation;
     });
@@ -112,11 +119,11 @@ class PoincareTiling {
             P,
             T.inverse(),
             Q,
-            T,
+            T
           );
           N.p = P.p;
           N.q = Q.q;
-          Ns.push(N)
+          Ns.push(N);
           visited.push({ p: P.p, q: Q.q });
         }
       });
@@ -132,7 +139,10 @@ class PoincareTiling {
     const T1s = [...Ts];
     Cs.forEach(C => {
       Ns.forEach(N => {
-        const C1 = this.compose(C, N);
+        const C1 = this.compose(
+          C,
+          N
+        );
 
         // conditionally add the transformation
         const alreadyExistsInT1s = T1s.find(T => Moebius.originMapEqual(T, C1));
@@ -141,13 +151,13 @@ class PoincareTiling {
           C1s.push(C1);
           T1s.push(C1);
         }
-      })
+      });
     });
 
     return {
       coronaTransformations: C1s,
-      allTransformations: T1s
-    }
+      allTransformations: T1s,
+    };
   }
 }
 

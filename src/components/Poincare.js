@@ -1,5 +1,5 @@
 import React from 'react';
-import { withContentRect } from 'react-measure'
+import { withContentRect } from 'react-measure';
 import * as d3 from 'd3';
 
 import PoincareTiling from '../construction/poincareTiling';
@@ -26,8 +26,12 @@ class Poincare extends React.Component {
     const { measureRef } = this.props;
     const { width, height } = this._dimensions();
     return (
-      <div ref={measureRef} style={{width: '100%', height: '100%'}}>
-        <canvas width={width} height={height} ref={node => this.canvasRef = node} />
+      <div ref={measureRef} style={{ width: '100%', height: '100%' }}>
+        <canvas
+          width={width}
+          height={height}
+          ref={node => (this.canvasRef = node)}
+        />
       </div>
     );
   }
@@ -41,27 +45,25 @@ class Poincare extends React.Component {
     const { width, height } = this._dimensions();
     const R = Math.min(width, height) / 2;
     const canvas = d3.select(this.canvasRef);
-    
+
     // update dims
-    canvas
-      .attr('width', width)
-      .attr('height', height)
+    canvas.attr('width', width).attr('height', height);
 
     // get context
-    const context = canvas.node().getContext("2d");
+    const context = canvas.node().getContext('2d');
     if (!context) {
       return;
     }
 
     context.translate(0.5, 0.5);
-    context.fillStyle = "white";
-    context.strokeStyle = "black";
+    context.fillStyle = 'white';
+    context.strokeStyle = 'black';
     context.fillRect(0, 0, width, height);
     context.translate(width / 2, height / 2);
     context.save();
 
     // boundary circle
-    this._renderBoundaryCircle(context, R)
+    this._renderBoundaryCircle(context, R);
 
     // generate polygons
     const polygons = this.tiling.polygons();
@@ -69,8 +71,8 @@ class Poincare extends React.Component {
     // render polygons
     this._renderPolygonsRightTriangles(context, polygons, R);
     // this._renderPolygonsSolid(context, polygons, R);
-    
-    context.restore()
+
+    context.restore();
   }
   _renderBoundaryCircle(context, R) {
     context.beginPath();
@@ -80,7 +82,7 @@ class Poincare extends React.Component {
   }
   _renderPolygonsRightTriangles(context, polygons, R) {
     polygons.forEach(polygon => {
-      this._renderPolygonRightTriangles(context, polygon, R)
+      this._renderPolygonRightTriangles(context, polygon, R);
     });
   }
   _renderPolygonRightTriangles(context, polygon, R) {
@@ -100,7 +102,7 @@ class Poincare extends React.Component {
       const M = midpoints[edge[0]];
 
       // T1
-      context.fillStyle = COLOR1
+      context.fillStyle = COLOR1;
       context.beginPath();
       context.moveTo(O.re * R, O.im * R);
       this._renderGeodesic(context, O, A, R);
@@ -110,7 +112,7 @@ class Poincare extends React.Component {
       context.fill();
 
       // T2
-      context.fillStyle = COLOR2
+      context.fillStyle = COLOR2;
       context.beginPath();
       context.moveTo(O.re * R, O.im * R);
       this._renderGeodesic(context, O, M, R);
@@ -118,7 +120,7 @@ class Poincare extends React.Component {
       this._renderGeodesic(context, B, O, R);
       context.closePath();
       context.fill();
-    })
+    });
   }
   _renderGeodesic(context, A, B, R) {
     // calculate circle/line info
@@ -127,12 +129,12 @@ class Poincare extends React.Component {
       context.lineTo(info.x2 * R, info.y2 * R);
     } else if (info.type === 'circle') {
       const { x, y, r, startAngle, endAngle, antiClockwise } = info;
-      context.arc(x * R, y * R, r * R, startAngle, endAngle, antiClockwise)
+      context.arc(x * R, y * R, r * R, startAngle, endAngle, antiClockwise);
     }
   }
   _renderPolygonsSolid(context, polygons, R) {
     polygons.forEach(polygon => {
-      this._renderPolygonSolid(context, polygon, R)
+      this._renderPolygonSolid(context, polygon, R);
     });
   }
   _renderPolygonSolid(context, polygon, R) {
@@ -171,9 +173,9 @@ class Poincare extends React.Component {
         context.lineTo(info.x2 * R, info.y2 * R);
       } else if (info.type === 'circle') {
         const { x, y, r, startAngle, endAngle, antiClockwise } = info;
-        context.arc(x * R, y * R, r * R, startAngle, endAngle, antiClockwise)
+        context.arc(x * R, y * R, r * R, startAngle, endAngle, antiClockwise);
       }
-    })
+    });
     context.lineTo(startPoint.re * R, startPoint.im * R);
     context.closePath();
     context.fill();
@@ -182,9 +184,9 @@ class Poincare extends React.Component {
 }
 
 function randomColor() {
-  var r = 255*Math.random()|0,
-      g = 255*Math.random()|0,
-      b = 255*Math.random()|0;
+  var r = (255 * Math.random()) | 0,
+    g = (255 * Math.random()) | 0,
+    b = (255 * Math.random()) | 0;
   return 'rgb(' + r + ',' + g + ',' + b + ')';
 }
 

@@ -16,19 +16,19 @@ class PoincareIsometry {
       a: beta,
       b: math.unaryMinus(math.multiply(alpha, beta)),
       c: math.conj(alpha),
-      d: -1
+      d: -1,
     });
   }
   static rotationAntiClockwiseAboutOrigin(theta) {
     return PoincareIsometry.general({
       alpha: 0,
-      beta: math.type.Complex.fromPolar(1, theta - Math.PI)
+      beta: math.type.Complex.fromPolar(1, theta - Math.PI),
     });
   }
   static translation(w) {
     return PoincareIsometry.general({
       alpha: w,
-      beta: 1
+      beta: 1,
     });
   }
 

@@ -20,7 +20,7 @@ class PoincareGeodesic {
         x1: c1.re,
         y1: c1.im,
         x2: c2.re,
-        y2: c2.im
+        y2: c2.im,
       };
     } else {
       // circle defined by circle passing through
@@ -40,18 +40,20 @@ class PoincareGeodesic {
       // handle inconsistency between:
       // * html canvas (angles clockwise from real axis)
       // * math.arg (angles anticlockwise from real axis)
-      let antiClockwise
-      if (math.abs((theta1 - theta2)) > (Math.PI / 2)) {
-        antiClockwise = theta1 < theta2
+      let antiClockwise;
+      if (math.abs(theta1 - theta2) > Math.PI / 2) {
+        antiClockwise = theta1 < theta2;
       } else {
-        antiClockwise = theta1 > theta2
+        antiClockwise = theta1 > theta2;
       }
       return {
         type: 'circle',
-        x, y, r,
+        x,
+        y,
+        r,
         startAngle: theta1,
         endAngle: theta2,
-        antiClockwise
+        antiClockwise,
       };
     }
   }
