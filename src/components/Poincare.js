@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { withContentRect } from 'react-measure';
 import * as d3 from 'd3';
 
@@ -182,6 +183,12 @@ class Poincare extends React.Component {
     context.stroke();
   }
 }
+
+Poincare.propTypes = {
+  p: PropTypes.number.isRequired,
+  q: PropTypes.number.isRequired,
+  depth: PropTypes.number.isRequired,
+};
 
 function randomColor() {
   var r = (255 * Math.random()) | 0,

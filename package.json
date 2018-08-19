@@ -6,6 +6,7 @@
     "@material-ui/core": "1.4.3",
     "d3": "5.5.0",
     "mathjs": "5.0.4",
+    "prop-types": "15.6.2",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
     "react-measure": "2.1.0"
