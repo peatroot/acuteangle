@@ -9,6 +9,7 @@ const MainContainer = styled.div`
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
+  padding: 2rem;
 `;
 
 const BannerTitle = styled.h1`
@@ -24,6 +25,7 @@ const SubTitle = styled.h2`
 const PoincareContainer = styled.div`
   display: flex;
   justify-content: space-evenly;
+  width: 100%;
 `;
 
 class App extends Component {

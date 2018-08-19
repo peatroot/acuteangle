@@ -39,12 +39,11 @@ class Poincare extends React.Component {
   _dimensions() {
     const { contentRect } = this.props;
     const { width } = contentRect.bounds;
-    const height = 500;
-    return { width, height };
+    return { width, height: width };
   }
   _render() {
     const { width, height } = this._dimensions();
-    const R = Math.min(width, height) / 2;
+    const R = width / 2 - 1;
     const canvas = d3.select(this.canvasRef);
 
     // update dims
