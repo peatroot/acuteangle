@@ -16,16 +16,14 @@ class PoincareTiling {
     this.depth = depth;
     this.pIndices = Array.from(Array(p).keys());
     this.qIndices = Array.from(Array(q).keys());
+    this.transformations = this.transformations();
   }
   polygons() {
     // calculate polygon centred at origin
     const originPolygon = PoincarePolygon.atOrigin(this.p, this.q, 0, 0);
 
-    // calculate transformations
-    const transformations = this.transformations();
-
     // apply transformations to fundamental polygon
-    const polygons = transformations.map(transformation => {
+    const polygons = this.transformations.map(transformation => {
       const polygon = originPolygon.transform(transformation);
       polygon.p = transformation.p;
       polygon.q = transformation.q;
