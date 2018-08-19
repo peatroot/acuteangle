@@ -15,7 +15,7 @@ class Poincare extends React.Component {
     this.canvasRef = React.createRef();
     this.p = p;
     this.q = q;
-    this.tiling = new PoincareTiling({ p, q, depth, radius: 0.269 });
+    this.tiling = new PoincareTiling({ p, q, depth });
   }
   componentDidMount() {
     this._render();

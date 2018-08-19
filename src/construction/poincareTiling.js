@@ -10,14 +10,12 @@ import PoincarePolygon from './poincarePolygon';
 // * coordinates are expressed in complex numbers in the unit disk
 
 class PoincareTiling {
-  constructor({ p, q, depth, radius }) {
+  constructor({ p, q, depth }) {
     this.p = p;
     this.q = q;
     this.depth = depth;
-    this.radius = radius;
     this.pIndices = Array.from(Array(p).keys());
     this.qIndices = Array.from(Array(q).keys());
-    this.pqIndices = Array.from(Array(p * q).keys());
   }
   polygons() {
     // calculate polygon centred at origin
