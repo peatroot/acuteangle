@@ -9,12 +9,12 @@ const COLOR1 = '#fa9';
 const COLOR2 = '#9af';
 
 class Poincare extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor({ p, q, depth }) {
+    super();
     this.canvasRef = React.createRef();
-    this.p = 5;
-    this.q = 4;
-    this.tiling = new PoincareTiling({ p: this.p, q: this.q, depth: 2, radius: 0.269 });
+    this.p = p;
+    this.q = q;
+    this.tiling = new PoincareTiling({ p, q, depth, radius: 0.269 });
   }
   componentDidMount() {
     this._render();
