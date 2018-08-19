@@ -28,6 +28,7 @@ class Poincare extends React.Component {
     return (
       <div ref={measureRef} style={{ width: '100%', height: '100%' }}>
         <canvas
+          style={{ position: 'absolute' }}
           width={width}
           height={height}
           ref={node => (this.canvasRef = node)}
