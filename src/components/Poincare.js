@@ -70,8 +70,8 @@ class Poincare extends React.Component {
     const polygons = this.tiling.polygons();
 
     // render polygons
-    this._renderPolygonsRightTriangles(context, polygons, R);
-    // this._renderPolygonsSolid(context, polygons, R);
+    // this._renderPolygonsRightTriangles(context, polygons, R);
+    this._renderPolygonsSolid(context, polygons, R);
 
     context.restore();
   }
