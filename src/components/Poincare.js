@@ -5,13 +5,12 @@ import * as d3 from 'd3';
 
 import PoincareTiling from '../construction/poincareTiling';
 import PoincareGeodesic from '../construction/PoincareGeodesic';
-
-const COLOR1 = '#fa9';
-const COLOR2 = '#9af';
+import PoincareCanvas from '../construction/poincareCanvas';
 
 class Poincare extends React.Component {
-  constructor({ p, q, depth }) {
-    super();
+  constructor(props) {
+    super(props);
+    const { p, q, depth } = props;
     this.canvasRef = React.createRef();
     this.p = p;
     this.q = q;
@@ -42,6 +41,7 @@ class Poincare extends React.Component {
     return { width, height: width };
   }
   _render() {
+    const { renderPolygons } = this.props;
     const { width, height } = this._dimensions();
     const R = width / 2 - 1;
     const canvas = d3.select(this.canvasRef);
@@ -55,131 +55,16 @@ class Poincare extends React.Component {
       return;
     }
 
-    context.translate(0.5, 0.5);
-    context.fillStyle = 'white';
-    context.strokeStyle = 'black';
+    // context.translate(0.5, 0.5);
+    context.fillStyle = 'rgba(255, 255, 255, 0)';
     context.fillRect(0, 0, width, height);
     context.translate(width / 2, height / 2);
     context.save();
 
-    // boundary circle
-    Poincare.renderBoundaryCircle(context, R);
-
-    // generate polygons
     const polygons = this.tiling.polygons();
-
-    // render polygons
-    // Poincare.renderPolygonsRightTriangles(context, polygons, R);
-    Poincare.renderPolygonsSolid(context, polygons, R);
+    renderPolygons(context, polygons, R);
 
     context.restore();
-  }
-  static renderBoundaryCircle(context, R) {
-    context.beginPath();
-    context.arc(0, 0, R, 0, Math.PI * 2, true);
-    context.closePath();
-    context.stroke();
-  }
-  static renderPolygonsRightTriangles(context, polygons, R) {
-    polygons.forEach(polygon => {
-      Poincare.renderPolygonRightTriangles(context, polygon, R);
-    });
-  }
-  static renderPolygonRightTriangles(context, polygon, R) {
-    // render polygons
-    context.strokeStyle = 'white';
-
-    const points = polygon._points;
-    const midpoints = polygon._midpoints;
-    const edges = polygon._edges;
-    const O = polygon._centre;
-
-    edges.forEach((edge, i) => {
-      // render two right triangles, T1 = OAM, T2 = OMB,
-      // using M = midpoint of AB
-      const A = points[edge[0]];
-      const B = points[edge[1]];
-      const M = midpoints[edge[0]];
-
-      // T1
-      context.fillStyle = COLOR1;
-      context.beginPath();
-      context.moveTo(O.re * R, O.im * R);
-      Poincare.renderGeodesic(context, O, A, R);
-      Poincare.renderGeodesic(context, A, M, R);
-      Poincare.renderGeodesic(context, M, O, R);
-      context.closePath();
-      context.fill();
-
-      // T2
-      context.fillStyle = COLOR2;
-      context.beginPath();
-      context.moveTo(O.re * R, O.im * R);
-      Poincare.renderGeodesic(context, O, M, R);
-      Poincare.renderGeodesic(context, M, B, R);
-      Poincare.renderGeodesic(context, B, O, R);
-      context.closePath();
-      context.fill();
-    });
-  }
-  static renderGeodesic(context, A, B, R) {
-    // calculate circle/line info
-    const info = PoincareGeodesic.renderInfo(A, B);
-    if (info.type === 'line') {
-      context.lineTo(info.x2 * R, info.y2 * R);
-    } else if (info.type === 'circle') {
-      const { x, y, r, startAngle, endAngle, antiClockwise } = info;
-      context.arc(x * R, y * R, r * R, startAngle, endAngle, antiClockwise);
-    }
-  }
-  static renderPolygonsSolid(context, polygons, R) {
-    polygons.forEach(polygon => {
-      Poincare.renderPolygonSolid(context, polygon, R);
-    });
-  }
-  static renderPolygonSolid(context, polygon, R) {
-    // render polygon points
-    context.fillStyle = 'white';
-    polygon._points.forEach(point => {
-      context.beginPath();
-      context.arc(point.re * R, point.im * R, 2, 0, Math.PI * 2, true);
-      context.fill();
-    });
-
-    // render polygons
-    context.fillStyle = randomColor();
-    context.strokeStyle = 'white';
-
-    const points = polygon._points;
-    const edges = polygon._edges;
-
-    let startPoint;
-    context.beginPath();
-    edges.forEach((edge, i) => {
-      // move to start
-      if (i === 0) {
-        startPoint = points[edge[0]];
-        context.moveTo(startPoint.re * R, startPoint.im * R);
-      }
-
-      // calculate circle/line info
-      const info = PoincareGeodesic.renderInfo(
-        points[edge[0]],
-        points[edge[1]]
-      );
-
-      // render depending on type
-      if (info.type === 'line') {
-        context.lineTo(info.x2 * R, info.y2 * R);
-      } else if (info.type === 'circle') {
-        const { x, y, r, startAngle, endAngle, antiClockwise } = info;
-        context.arc(x * R, y * R, r * R, startAngle, endAngle, antiClockwise);
-      }
-    });
-    context.lineTo(startPoint.re * R, startPoint.im * R);
-    context.closePath();
-    context.fill();
-    context.stroke();
   }
 }
 
@@ -187,14 +72,8 @@ Poincare.propTypes = {
   p: PropTypes.number.isRequired,
   q: PropTypes.number.isRequired,
   depth: PropTypes.number.isRequired,
+  renderPolygons: PropTypes.func.isRequired,
 };
-
-function randomColor() {
-  var r = (255 * Math.random()) | 0,
-    g = (255 * Math.random()) | 0,
-    b = (255 * Math.random()) | 0;
-  return 'rgb(' + r + ',' + g + ',' + b + ')';
-}
 
 Poincare = withContentRect('bounds')(Poincare);
 

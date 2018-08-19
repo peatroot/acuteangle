@@ -3,6 +3,7 @@ import './App.css';
 import styled from 'styled-components';
 
 import Poincare from './components/Poincare';
+import PoincareCanvas from './construction/poincareCanvas';
 
 const MainContainer = styled.div`
   display: flex;
@@ -28,6 +29,21 @@ const PoincareContainer = styled.div`
   width: 100%;
 `;
 
+const scheme1 = (context, polygons, R) => {
+  PoincareCanvas.renderBoundaryCircle(context, R, 'grey', 'grey');
+  PoincareCanvas.renderPolygonsRightTriangles(context, polygons, R);
+};
+
+const scheme2 = (context, polygons, R) => {
+  PoincareCanvas.renderBoundaryCircle(context, R, 'grey', 'grey');
+  PoincareCanvas.renderPolygonsSolid(context, polygons, R);
+};
+
+const scheme3 = (context, polygons, R) => {
+  PoincareCanvas.renderBoundaryCircle(context, R, 'grey', 'grey');
+  PoincareCanvas.renderPolygonsDuals(context, polygons, R);
+};
+
 class App extends Component {
   render() {
     return (
@@ -35,9 +51,9 @@ class App extends Component {
         <BannerTitle>acuteangle</BannerTitle>
         <SubTitle>Homepage of Gareth Peat</SubTitle>
         <PoincareContainer>
-          <Poincare p={3} q={7} depth={3} />
-          <Poincare p={7} q={3} depth={3} />
-          <Poincare p={5} q={4} depth={3} />
+          <Poincare p={3} q={8} depth={3} renderPolygons={scheme1} />
+          <Poincare p={3} q={7} depth={3} renderPolygons={scheme3} />
+          <Poincare p={5} q={4} depth={3} renderPolygons={scheme2} />
         </PoincareContainer>
       </MainContainer>
     );
