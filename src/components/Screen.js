@@ -3,7 +3,7 @@ import { styled } from '@material-ui/styles';
 
 const Screen = styled('div')(({ theme }) => ({
   padding: theme.spacing(2),
-  minHeight: '100%',
+  minHeight: `calc(100vh - ${2 * theme.spacing(2)}px)`,
   maxHeight: '100%',
 }));
 
