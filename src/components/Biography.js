@@ -3,18 +3,13 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Avatar, Typography, Link } from '@material-ui/core';
 
 const useStyles = makeStyles({
-  avatar: {
-    margin: 10,
-  },
   bigAvatar: {
-    // margin: 10,
     width: '100%',
     height: '100%',
     maxWidth: '200px',
   },
 });
 
-// const Biography = () => <img src="headshot.jpg" width="100%" height="100%" />;
 const Biography = () => {
   const classes = useStyles();
   return (
@@ -34,6 +29,9 @@ const Biography = () => {
         <Typography variant="h6">Personal homepage of Gareth Peat</Typography>
       </Grid>
       <Grid item>
+        <Typography>Software engineer. Based in Cambridge, UK.</Typography>
+      </Grid>
+      <Grid item>
         <Avatar
           alt="Gareth Peat"
           src="headshot.jpg"
@@ -48,9 +46,6 @@ const Biography = () => {
           theory, expert systems and natural language processing. I currently
           write software in the genetics and bioinformatics sector. I studied
           mathematics.
-          {/* lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem
-          ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-          lorem ipsum */}
         </Typography>
       </Grid>
       <Grid item>
