@@ -45,13 +45,15 @@ const Biography = () => {
           interested in lots of things, but currently curious about graph
           theory, expert systems and natural language processing. I currently
           write software in the genetics and bioinformatics sector. I studied
-          mathematics.
+          mathematics a long time ago.
         </Typography>
       </Grid>
       <Grid item>
-        <Link href="https://github.com/peatroot">github</Link> •{' '}
-        <Link href="https://observablehq.com/@peatroot">observable</Link> •{' '}
-        <Link href="https://www.linkedin.com/in/garethpeat/">linkedin</Link>
+        <Typography>
+          <Link href="https://github.com/peatroot">github</Link> •{' '}
+          <Link href="https://observablehq.com/@peatroot">observable</Link> •{' '}
+          <Link href="https://www.linkedin.com/in/garethpeat/">linkedin</Link>
+        </Typography>
       </Grid>
     </Grid>
   );
