@@ -2,7 +2,7 @@ import React from 'react';
 import { Grid, Typography, Link } from '@material-ui/core';
 
 const Index = () => (
-  <Grid container direction="column" justify="center" spacing={2}>
+  <Grid container direction="column" justify="center" spacing={1}>
     <Grid item>
       <Typography variant="h6">Data Visualisation</Typography>
       <Typography>

@@ -18,7 +18,7 @@ const Biography = () => {
       direction="column"
       justify="center"
       alignItems="center"
-      spacing={2}
+      spacing={1}
     >
       <Grid item>
         <Typography variant="h5" component="h1">

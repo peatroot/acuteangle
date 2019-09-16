@@ -1,10 +1,27 @@
 import React from 'react';
-import { styled } from '@material-ui/styles';
+import { makeStyles } from '@material-ui/styles';
+import { Grid } from '@material-ui/core';
 
-const Screen = styled('div')(({ theme }) => ({
-  padding: theme.spacing(2),
-  minHeight: `calc(100vh - ${2 * theme.spacing(2)}px)`,
-  maxHeight: '100%',
+const useStyles = makeStyles(theme => ({
+  screen: {
+    minHeight: '100vh',
+  },
 }));
+
+const Screen = ({ children }) => {
+  const classes = useStyles();
+  return (
+    <Grid
+      className={classes.screen}
+      container
+      justify="center"
+      alignItems="center"
+    >
+      <Grid item xs={10} lg={8}>
+        {children}
+      </Grid>
+    </Grid>
+  );
+};
 
 export default Screen;
