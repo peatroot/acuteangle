@@ -5,7 +5,7 @@ const Index = () => (
   <Grid container direction="column" justify="center" spacing={1}>
     <Grid item>
       <Typography variant="h6">Data Visualisation</Typography>
-      <Typography>
+      <Typography component="div">
         Some examples using D3, hosted on ObservableHQ.
         <ul>
           <li>
