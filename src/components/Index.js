@@ -9,6 +9,16 @@ const Index = () => (
         Some examples using D3, hosted on ObservableHQ.
         <ul>
           <li>
+            <Link href="https://observablehq.com/@peatroot/stars-and-constellations-ii">
+              Visible constellations based on observer location
+            </Link>
+          </li>
+          <li>
+            <Link href="https://observablehq.com/@peatroot/stars-and-constellations">
+              Fixed stars and constellations
+            </Link>
+          </li>
+          <li>
             <Link href="https://observablehq.com/@peatroot/interacting-with-directed-acyclic-graphs">
               Interacting with a directed acyclic graph
             </Link>
