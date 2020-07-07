@@ -1,40 +1,18 @@
-import React, { Component } from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
-
-import { cyan } from '@material-ui/core/colors';
-
-import './App.css';
-import { createMuiTheme } from '@material-ui/core/styles';
+import React from 'react';
+import { CssBaseline } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/styles';
-import Home from './pages/Home';
 
+import theme from './theme';
+import Home from './pages/Home';
 import Screen from './components/Screen';
 
-const theme = createMuiTheme({
-  palette: {
-    primary: {
-      main: cyan[500],
-    },
-  },
-  typography: {
-    useNextVariants: true,
-    fontFamily: '"Inter", "serif"',
-    fontSize: 10,
-  },
-});
-
-class App extends Component {
-  render() {
-    return (
-      <ThemeProvider theme={theme}>
-        <Screen>
-          <Router>
-            <Route path="/" exact component={Home} />
-          </Router>
-        </Screen>
-      </ThemeProvider>
-    );
-  }
-}
+const App = () => (
+  <ThemeProvider theme={theme}>
+    <CssBaseline />
+    <Screen>
+      <Home />
+    </Screen>
+  </ThemeProvider>
+);
 
 export default App;
