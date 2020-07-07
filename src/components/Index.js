@@ -9,6 +9,11 @@ const Index = () => (
         Some examples using D3, hosted on ObservableHQ.
         <ul>
           <li>
+            <Link href="https://observablehq.com/@peatroot/fragment-shaders">
+              GLSL fragment shaders
+            </Link>
+          </li>
+          <li>
             <Link href="https://observablehq.com/@peatroot/stars-and-constellations-ii">
               Visible constellations based on observer location
             </Link>
