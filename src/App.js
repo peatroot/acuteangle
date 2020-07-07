@@ -1,5 +1,4 @@
 import React from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { CssBaseline } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/styles';
 
@@ -11,9 +10,7 @@ const App = () => (
   <ThemeProvider theme={theme}>
     <CssBaseline />
     <Screen>
-      <Router>
-        <Route path="/" exact component={Home} />
-      </Router>
+      <Home />
     </Screen>
   </ThemeProvider>
 );
