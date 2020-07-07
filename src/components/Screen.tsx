@@ -2,13 +2,13 @@ import React from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { Grid } from '@material-ui/core';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   screen: {
     minHeight: '100vh',
   },
 }));
 
-const Screen = ({ children }) => {
+const Screen: React.FC<{}> = ({ children }) => {
   const classes = useStyles();
   return (
     <Grid
