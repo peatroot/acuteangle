@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 import { cyan } from '@material-ui/core/colors';
+import { CssBaseline } from '@material-ui/core';
 
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
@@ -26,6 +27,7 @@ class App extends Component {
   render() {
     return (
       <ThemeProvider theme={theme}>
+        <CssBaseline />
         <Screen>
           <Router>
             <Route path="/" exact component={Home} />
